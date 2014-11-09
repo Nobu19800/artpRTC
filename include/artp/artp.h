@@ -19,6 +19,17 @@
 #include <rtm/idl/ExtendedDataTypesSkel.h>
 #include <rtm/idl/InterfaceDataTypesSkel.h>
 
+#include <opencv2/core/core.hpp>
+#include <opencv2/highgui/highgui.hpp>
+#include <opencv2/imgproc/imgproc_c.h>
+#include <opencv2/imgproc/imgproc.hpp>
+
+
+
+#include "ImageDataCom.h"
+#include "artpFunc.h"
+
+
 // Service implementation headers
 // <rtc-template block="service_impl_h">
 
@@ -223,18 +234,15 @@ class artp
 
   // Configuration variable declaration
   // <rtc-template block="config_declare">
-  /*!
-   * 
-   * - Name:  pattfile
-   * - DefaultValue: orbit.dat
-   */
-  std::string m_pattfile;
-  /*!
-   * 
-   * - Name:  camerafile
-   * - DefaultValue: data/LogitechPro4000.dat
-   */
+  std::string m_markerMode;
   std::string m_camerafile;
+  int m_threshold;
+  float m_borderWidth;
+  float m_patternWidth;
+  float m_nNearClip;
+  float m_nFarClip;
+  int m_patternID;
+  
   // </rtc-template>
 
   // DataInPort declaration
@@ -256,6 +264,16 @@ class artp
   
   // </rtc-template>
 
+
+  // DataOutPort declaration
+  // <rtc-template block="outport_declare">
+  TimedDoubleSeq m_trans;
+  /*!
+   */
+  OutPort<TimedDoubleSeq> m_transOut;
+  
+  // </rtc-template>
+
   // CORBA Port declaration
   // <rtc-template block="corbaport_declare">
   
@@ -272,6 +290,9 @@ class artp
   // </rtc-template>
 
  private:
+	 
+	 IplImage *m_imageBuff;
+	 artpFunc *m_artpFunc;
   // <rtc-template block="private_attribute">
   
   // </rtc-template>

@@ -15,11 +15,27 @@
 #include <opencv2/imgproc/imgproc_c.h>
 #include <opencv2/imgproc/imgproc.hpp>
 
+#include <rtm/idl/BasicDataTypeSkel.h>
+#include <rtm/idl/ExtendedDataTypesSkel.h>
 
 
 
-	
+class artpFunc
+{
+public:
+	artpFunc();
+	~artpFunc();
+	bool AR_GetPose(RTC::TimedPose3D *pose, RTC::TimedDoubleSeq *trans,IplImage* img ,int pattID = 0);
+	void resize(IplImage* img);
+	bool init(IplImage* img, std::string cn, std::string markerMode = "SIMPLE", int threshold = 150, float borderWidth = 0.25, float patternWidth = 80, float nNearClip = 1.0, float nFarClip = 1000.0);
+	 std::string m_cn;
+	std::string m_markerMode;
+	 int m_threshold;
+	 float m_borderWidth;
+	 float m_patternWidth;
+	 float m_nNearClip;
+	 float m_nFarClip;
+	 int width, height;
 
-bool AR_GetPose(float *x, float *y, float *z, float *roll, float *pitch, float *yaw, std::string cn, IplImage* img, std::string markerMode = "SIMPLE", int threshold = 150, float borderWidth = 0.25, float patternWidth = 80, float nNearClip = 1.0, float nFarClip = 1000.0);
-
+};
 #endif

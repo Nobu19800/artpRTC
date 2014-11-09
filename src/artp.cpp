@@ -33,6 +33,7 @@ static const char* artp_spec[] =
 	"conf.default.patternWidth", "80",
 	"conf.default.nNearClip", "1.0",
 	"conf.default.nFarClip", "1000.0",
+	"conf.default.patternID", "0",
     // Widget
     "conf.__widget__.markerMode", "radio",
     "conf.__widget__.camerafile", "text",
@@ -41,6 +42,7 @@ static const char* artp_spec[] =
 	"conf.__widget__.patternWidth", "text",
 	"conf.__widget__.nNearClip", "text",
 	"conf.__widget__.nFarClip", "text",
+	"conf.__widget__.patternID", "text",
     // Constraints
 	"conf.__constraints__.markerMode", "(SIMPLE,BCH)",
     ""
@@ -55,11 +57,12 @@ artp::artp(RTC::Manager* manager)
     // <rtc-template block="initializer">
   : RTC::DataFlowComponentBase(manager),
     m_imageIn("image", m_image),
-    m_posOut("pos", m_pos)
+    m_posOut("pos", m_pos),
+	m_transOut("trans", m_trans)
 
     // </rtc-template>
 {
-	
+	m_artpFunc = NULL;
 }
 
 /*!
@@ -80,6 +83,7 @@ RTC::ReturnCode_t artp::onInitialize()
   
   // Set OutPort buffer
   addOutPort("pos", m_posOut);
+  addOutPort("trans", m_transOut);
   
   // Set service provider to Ports
   
@@ -98,6 +102,7 @@ RTC::ReturnCode_t artp::onInitialize()
   bindParameter("patternWidth", m_patternWidth, "80");
   bindParameter("nNearClip", m_nNearClip, "1.0");
   bindParameter("nFarClip", m_nFarClip, "1000.0");
+  bindParameter("patternID", m_patternID, "0");
   
 
 
@@ -131,7 +136,7 @@ RTC::ReturnCode_t artp::onShutdown(RTC::UniqueId ec_id)
 RTC::ReturnCode_t artp::onActivated(RTC::UniqueId ec_id)
 {
 	
-
+	
 	
 
   return RTC::RTC_OK;
@@ -140,7 +145,9 @@ RTC::ReturnCode_t artp::onActivated(RTC::UniqueId ec_id)
 
 RTC::ReturnCode_t artp::onDeactivated(RTC::UniqueId ec_id)
 {
-	
+	if(m_artpFunc)
+		delete m_artpFunc;
+	m_artpFunc = NULL;
   return RTC::RTC_OK;
 }
 
@@ -162,20 +169,24 @@ RTC::ReturnCode_t artp::onExecute(RTC::UniqueId ec_id)
 
 		m_imageBuff = GetCameraImage(&m_image);
 
+		if(m_artpFunc == NULL)
+		{
+			m_artpFunc = new artpFunc();
+			if(!m_artpFunc->init(m_imageBuff,m_camerafile,m_markerMode,m_threshold,m_borderWidth,m_patternWidth,m_nNearClip,m_nFarClip))
+			{
+				return RTC::RTC_ERROR; 
+			}
+		}
 		
-		float x,y,z,roll,pitch,yaw;
-		if(!AR_GetPose(&x,&y,&z,&roll,&pitch,&yaw,m_camerafile,m_imageBuff,m_markerMode,m_threshold,m_borderWidth,m_patternWidth,m_nNearClip,m_nFarClip))
+		
+		if(!m_artpFunc->AR_GetPose(&m_pos,&m_trans,m_imageBuff,m_patternID))
 		{
 			return RTC::RTC_OK;
 		}
-		std::cout << x << "\t" << y << "\t" << z << "\t" << roll << "\t"  << pitch << "\t" << yaw << std::endl;
-		m_pos.data.position.x = x;
-		m_pos.data.position.y = y;
-		m_pos.data.position.z = z;
-		m_pos.data.orientation.r = roll;
-		m_pos.data.orientation.p = pitch;
-		m_pos.data.orientation.y = yaw;
+		std::cout << m_pos.data.position.x << "\t" << m_pos.data.position.y << "\t" << m_pos.data.position.z << "\t" << m_pos.data.orientation.r << "\t"  << m_pos.data.orientation.p << "\t" << m_pos.data.orientation.y << std::endl;
+		
 		m_posOut.write();
+		m_transOut.write();
 
 
 	}
