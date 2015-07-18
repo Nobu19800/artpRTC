@@ -10,8 +10,6 @@
 #   --module-desc='ARToolKitPlus Component' --module-version=1.0.0 --module-vendor=Miyamoto Nobuhiko 
 #   --module-category=TEST --module-comp-type=STATIC 
 #   --module-act-type=PERIODIC --module-max-inst=1 
-#   --config=pattfile:string:orbit.dat --config=camerafile:string:data/LogitechPro4000.dat 
-#   --inport=image:RTC::CameraImage --outport=pos:RTC::TimedPose3D 
 
 
 ======================================================================
@@ -39,11 +37,11 @@ Lang Type:
 
 [on_initialize]    implemented
 
-[on_finalize]
+[on_finalize]      implemented
 
-[on_startup]
+[on_startup]       implemented
 
-[on_shutdown]
+[on_shutdown]      implemented
 
 [on_activated]     implemented
 
@@ -51,38 +49,20 @@ Lang Type:
 
 [on_execute]       implemented
 
-[on_aborting]
+[on_aborting]      implemented
 
-[on_error]
+[on_error]         implemented
 
-[on_reset]
+[on_reset]         implemented
 
-[on_state_update]
+[on_state_update]  implemented
 
-[on_rate_changed]
+[on_rate_changed]  implemented
 
 ======================================================================
     InPorts definition
 ======================================================================
 # <rtc-template block="inport">
-
-	Name:        image
-	PortNumber:  0
-	Description: 
-	PortType: 
-	DataType:    RTC::CameraImage
-	MaxOut: 
-	[Data Elements]
-		Name:
-		Type:            
-		Number:          
-		Semantics:       
-		Unit:            
-		Frequency:       
-		Operation Cycle: 
-		RangeLow:
-		RangeHigh:
-		DefaultValue:
 
 
 # </rtc-template>
@@ -91,24 +71,6 @@ Lang Type:
     OutPorts definition
 ======================================================================
 # <rtc-template block="outport">
-
-	Name:        pos
-	PortNumber:  0
-	Description: 
-	PortType: 
-	DataType:    RTC::TimedPose3D
-	MaxOut: 
-	[Data Elements]
-		Name:
-		Type:            
-		Number:          
-		Semantics:       
-		Unit:            
-		Frequency:       
-		Operation Cycle: 
-		RangeLow:
-		RangeHigh:
-		DefaultValue:
 
 
 # </rtc-template>
@@ -124,23 +86,6 @@ Lang Type:
     Configuration definition
 ======================================================================
 # <rtc-template block="configuration">
-	Configuration:
-		Name:             pattfile
-		Description:     
-		Type:            string
-		DefaultValue:     orbit.dat
-		Unit:            
-		Range:           
-		Constraint:      
-
-		Name:             camerafile
-		Description:     
-		Type:            string
-		DefaultValue:     data/LogitechPro4000.dat
-		Unit:            
-		Range:           
-		Constraint:      
-
 # </rtc-template> 
 
 This software is developed at the National Institute of Advanced

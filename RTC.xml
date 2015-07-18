@@ -1,33 +1,94 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<rtc:RtcProfile rtc:version="0.2" rtc:id="RTC:Miyamoto Nobuhiko:TEST:artp:1.0.0" xmlns:rtcExt="http://www.openrtp.org/namespaces/rtc_ext" xmlns:rtcDoc="http://www.openrtp.org/namespaces/rtc_doc" xmlns:rtc="http://www.openrtp.org/namespaces/rtc" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-    <rtc:BasicInfo xsi:type="rtcExt:basic_info_ext" rtcExt:saveProject="artp" rtc:updateDate="2014-11-08T19:49:03+09:00" rtc:creationDate="2014-11-08T19:49:03+09:00" rtc:version="1.0.0" rtc:vendor="Miyamoto Nobuhiko" rtc:maxInstances="1" rtc:executionType="PeriodicExecutionContext" rtc:executionRate="1000.0" rtc:description="ARToolKitPlus Component" rtc:category="TEST" rtc:componentKind="DataFlowComponent" rtc:activityType="PERIODIC" rtc:componentType="STATIC" rtc:name="artp">
+<rtc:RtcProfile rtc:version="0.2" rtc:id="RTC:Miyamoto Nobuhiko:ImageProcessing:artp:1.0.0" xmlns:rtcExt="http://www.openrtp.org/namespaces/rtc_ext" xmlns:rtcDoc="http://www.openrtp.org/namespaces/rtc_doc" xmlns:rtc="http://www.openrtp.org/namespaces/rtc" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <rtc:BasicInfo xsi:type="rtcExt:basic_info_ext" rtcExt:saveProject="artp" rtc:updateDate="2015-07-18T15:08:26.945+09:00" rtc:creationDate="2015-07-17T20:30:26+09:00" rtc:abstract="入力された画像データからマーカーの位置を検出し出力します。" rtc:version="1.0.0" rtc:vendor="Miyamoto Nobuhiko" rtc:maxInstances="1" rtc:executionType="PeriodicExecutionContext" rtc:executionRate="1000.0" rtc:description="ARToolKitPlus Component" rtc:category="ImageProcessing" rtc:componentKind="DataFlowComponent" rtc:activityType="PERIODIC" rtc:componentType="STATIC" rtc:name="artp">
+        <rtcDoc:Doc rtcDoc:reference="" rtcDoc:license="GPL" rtcDoc:creator="" rtcDoc:algorithm="" rtcDoc:inout="" rtcDoc:description="入力された画像データからマーカーの位置を検出し出力します。"/>
         <rtcExt:VersionUpLogs></rtcExt:VersionUpLogs>
     </rtc:BasicInfo>
     <rtc:Actions>
         <rtc:OnInitialize xsi:type="rtcDoc:action_status_doc" rtc:implemented="true"/>
-        <rtc:OnFinalize xsi:type="rtcDoc:action_status_doc" rtc:implemented="false"/>
-        <rtc:OnStartup xsi:type="rtcDoc:action_status_doc" rtc:implemented="false"/>
-        <rtc:OnShutdown xsi:type="rtcDoc:action_status_doc" rtc:implemented="false"/>
+        <rtc:OnFinalize xsi:type="rtcDoc:action_status_doc" rtc:implemented="true"/>
+        <rtc:OnStartup xsi:type="rtcDoc:action_status_doc" rtc:implemented="true"/>
+        <rtc:OnShutdown xsi:type="rtcDoc:action_status_doc" rtc:implemented="true"/>
         <rtc:OnActivated xsi:type="rtcDoc:action_status_doc" rtc:implemented="true"/>
         <rtc:OnDeactivated xsi:type="rtcDoc:action_status_doc" rtc:implemented="true"/>
-        <rtc:OnAborting xsi:type="rtcDoc:action_status_doc" rtc:implemented="false"/>
-        <rtc:OnError xsi:type="rtcDoc:action_status_doc" rtc:implemented="false"/>
-        <rtc:OnReset xsi:type="rtcDoc:action_status_doc" rtc:implemented="false"/>
+        <rtc:OnAborting xsi:type="rtcDoc:action_status_doc" rtc:implemented="true"/>
+        <rtc:OnError xsi:type="rtcDoc:action_status_doc" rtc:implemented="true"/>
+        <rtc:OnReset xsi:type="rtcDoc:action_status_doc" rtc:implemented="true"/>
         <rtc:OnExecute xsi:type="rtcDoc:action_status_doc" rtc:implemented="true"/>
-        <rtc:OnStateUpdate xsi:type="rtcDoc:action_status_doc" rtc:implemented="false"/>
-        <rtc:OnRateChanged xsi:type="rtcDoc:action_status_doc" rtc:implemented="false"/>
-        <rtc:OnAction xsi:type="rtcDoc:action_status_doc" rtc:implemented="false"/>
-        <rtc:OnModeChanged xsi:type="rtcDoc:action_status_doc" rtc:implemented="false"/>
+        <rtc:OnStateUpdate xsi:type="rtcDoc:action_status_doc" rtc:implemented="true"/>
+        <rtc:OnRateChanged xsi:type="rtcDoc:action_status_doc" rtc:implemented="true"/>
+        <rtc:OnAction xsi:type="rtcDoc:action_status_doc" rtc:implemented="true"/>
+        <rtc:OnModeChanged xsi:type="rtcDoc:action_status_doc" rtc:implemented="true"/>
     </rtc:Actions>
     <rtc:ConfigurationSet>
-        <rtc:Configuration xsi:type="rtcExt:configuration_ext" rtcExt:variableName="" rtc:unit="" rtc:defaultValue="orbit.dat" rtc:type="string" rtc:name="pattfile">
-            <rtcExt:Properties rtcExt:value="text" rtcExt:name="__widget__"/>
+        <rtc:Configuration xsi:type="rtcExt:configuration_ext" rtcExt:variableName="" rtc:unit="" rtc:defaultValue="SIMPLE" rtc:type="string" rtc:name="markerMode">
+            <rtc:Constraint>
+                <rtc:ConstraintUnitType>
+                    <rtc:Or>
+                        <rtc:Constraint>
+                            <rtc:ConstraintUnitType>
+                                <rtc:propertyIsEqualTo rtc:matchCase="false">
+                                    <rtc:Literal>SIMPLE</rtc:Literal>
+                                </rtc:propertyIsEqualTo>
+                            </rtc:ConstraintUnitType>
+                        </rtc:Constraint>
+                        <rtc:Constraint>
+                            <rtc:ConstraintUnitType>
+                                <rtc:propertyIsEqualTo rtc:matchCase="false">
+                                    <rtc:Literal>BCH</rtc:Literal>
+                                </rtc:propertyIsEqualTo>
+                            </rtc:ConstraintUnitType>
+                        </rtc:Constraint>
+                    </rtc:Or>
+                </rtc:ConstraintUnitType>
+            </rtc:Constraint>
+            <rtcDoc:Doc rtcDoc:constraint="" rtcDoc:range="(SIMPLE,BCH)" rtcDoc:unit="" rtcDoc:description="" rtcDoc:defaultValue="SIMPLE" rtcDoc:dataname="markerMode"/>
+            <rtcExt:Properties rtcExt:value="radio" rtcExt:name="__widget__"/>
         </rtc:Configuration>
         <rtc:Configuration xsi:type="rtcExt:configuration_ext" rtcExt:variableName="" rtc:unit="" rtc:defaultValue="data/LogitechPro4000.dat" rtc:type="string" rtc:name="camerafile">
+            <rtcDoc:Doc rtcDoc:constraint="" rtcDoc:range="" rtcDoc:unit="" rtcDoc:description="カメラの設定ファイルのファイル名" rtcDoc:defaultValue="data/LogitechPro4000.dat" rtcDoc:dataname="camerafile"/>
+            <rtcExt:Properties rtcExt:value="text" rtcExt:name="__widget__"/>
+        </rtc:Configuration>
+        <rtc:Configuration xsi:type="rtcExt:configuration_ext" rtcExt:variableName="" rtc:unit="" rtc:defaultValue="150" rtc:type="int" rtc:name="threshold">
+            <rtcDoc:Doc rtcDoc:constraint="" rtcDoc:range="" rtcDoc:unit="" rtcDoc:description="" rtcDoc:defaultValue="150" rtcDoc:dataname="threshold"/>
+            <rtcExt:Properties rtcExt:value="text" rtcExt:name="__widget__"/>
+        </rtc:Configuration>
+        <rtc:Configuration xsi:type="rtcExt:configuration_ext" rtcExt:variableName="" rtc:unit="" rtc:defaultValue="0.25" rtc:type="float" rtc:name="borderWidth">
+            <rtcDoc:Doc rtcDoc:constraint="" rtcDoc:range="" rtcDoc:unit="" rtcDoc:description="" rtcDoc:defaultValue="0.25" rtcDoc:dataname="borderWidth"/>
+            <rtcExt:Properties rtcExt:value="text" rtcExt:name="__widget__"/>
+        </rtc:Configuration>
+        <rtc:Configuration xsi:type="rtcExt:configuration_ext" rtcExt:variableName="" rtc:unit="" rtc:defaultValue="80" rtc:type="float" rtc:name="patternWidth">
+            <rtcDoc:Doc rtcDoc:constraint="" rtcDoc:range="" rtcDoc:unit="" rtcDoc:description="マーカーの幅" rtcDoc:defaultValue="80" rtcDoc:dataname="patternWidth"/>
+            <rtcExt:Properties rtcExt:value="text" rtcExt:name="__widget__"/>
+        </rtc:Configuration>
+        <rtc:Configuration xsi:type="rtcExt:configuration_ext" rtcExt:variableName="" rtc:unit="" rtc:defaultValue="1.0" rtc:type="float" rtc:name="nNearClip">
+            <rtcDoc:Doc rtcDoc:constraint="" rtcDoc:range="" rtcDoc:unit="" rtcDoc:description="" rtcDoc:defaultValue="1.0" rtcDoc:dataname="nNearClip"/>
+            <rtcExt:Properties rtcExt:value="text" rtcExt:name="__widget__"/>
+        </rtc:Configuration>
+        <rtc:Configuration xsi:type="rtcExt:configuration_ext" rtcExt:variableName="" rtc:unit="" rtc:defaultValue="1000.0" rtc:type="float" rtc:name="nFarClip">
+            <rtcDoc:Doc rtcDoc:constraint="" rtcDoc:range="" rtcDoc:unit="" rtcDoc:description="" rtcDoc:defaultValue="1000.0" rtcDoc:dataname="nFarClip"/>
+            <rtcExt:Properties rtcExt:value="text" rtcExt:name="__widget__"/>
+        </rtc:Configuration>
+        <rtc:Configuration xsi:type="rtcExt:configuration_ext" rtcExt:variableName="" rtc:unit="" rtc:defaultValue="0" rtc:type="int" rtc:name="patternID">
+            <rtcDoc:Doc rtcDoc:constraint="" rtcDoc:range="" rtcDoc:unit="" rtcDoc:description="マーカーのID" rtcDoc:defaultValue="0" rtcDoc:dataname="patternID"/>
             <rtcExt:Properties rtcExt:value="text" rtcExt:name="__widget__"/>
         </rtc:Configuration>
     </rtc:ConfigurationSet>
-    <rtc:DataPorts xsi:type="rtcExt:dataport_ext" rtcExt:position="LEFT" rtcExt:variableName="" rtc:unit="" rtc:subscriptionType="" rtc:dataflowType="" rtc:interfaceType="" rtc:idlFile="" rtc:type="RTC::CameraImage" rtc:name="image" rtc:portType="DataInPort"/>
-    <rtc:DataPorts xsi:type="rtcExt:dataport_ext" rtcExt:position="RIGHT" rtcExt:variableName="" rtc:unit="" rtc:subscriptionType="" rtc:dataflowType="" rtc:interfaceType="" rtc:idlFile="" rtc:type="RTC::TimedPose3D" rtc:name="pos" rtc:portType="DataOutPort"/>
-    <rtc:Language xsi:type="rtcExt:language_ext" rtc:kind="C++"/>
+    <rtc:DataPorts xsi:type="rtcExt:dataport_ext" rtcExt:position="LEFT" rtcExt:variableName="" rtc:unit="" rtc:subscriptionType="" rtc:dataflowType="" rtc:interfaceType="" rtc:idlFile="" rtc:type="RTC::CameraImage" rtc:name="image" rtc:portType="DataInPort">
+        <rtcDoc:Doc rtcDoc:operation="" rtcDoc:occerrence="" rtcDoc:unit="" rtcDoc:semantics="" rtcDoc:number="" rtcDoc:type="RTC::CameraImage" rtcDoc:description="入力する画像データ"/>
+    </rtc:DataPorts>
+    <rtc:DataPorts xsi:type="rtcExt:dataport_ext" rtcExt:position="RIGHT" rtcExt:variableName="" rtc:unit="" rtc:subscriptionType="" rtc:dataflowType="" rtc:interfaceType="" rtc:idlFile="" rtc:type="RTC::TimedPose3D" rtc:name="pos" rtc:portType="DataOutPort">
+        <rtcDoc:Doc rtcDoc:operation="" rtcDoc:occerrence="" rtcDoc:unit="m,rad" rtcDoc:semantics="" rtcDoc:number="" rtcDoc:type="RTC::TimedPose3D" rtcDoc:description="マーカーの位置、姿勢"/>
+    </rtc:DataPorts>
+    <rtc:DataPorts xsi:type="rtcExt:dataport_ext" rtcExt:position="RIGHT" rtcExt:variableName="" rtc:unit="" rtc:subscriptionType="" rtc:dataflowType="" rtc:interfaceType="" rtc:idlFile="" rtc:type="RTC::TimedDoubleSeq" rtc:name="trans" rtc:portType="DataOutPort">
+        <rtcDoc:Doc rtcDoc:operation="" rtcDoc:occerrence="" rtcDoc:unit="" rtcDoc:semantics="" rtcDoc:number="" rtcDoc:type="RTC::TimedDoubleSeq" rtcDoc:description="マーカーの姿勢の同次変換行列"/>
+    </rtc:DataPorts>
+    <rtc:Language xsi:type="rtcExt:language_ext" rtc:kind="C++">
+        <rtcExt:targets rtcExt:os="Windows" rtcExt:langVersion="New Version">
+            <rtcExt:osVersions>Vista</rtcExt:osVersions>
+            <rtcExt:osVersions>8.1</rtcExt:osVersions>
+            <rtcExt:libraries rtcExt:other="https://handheldar.icg.tugraz.at/artoolkitplus.php" rtcExt:version="2.1.1" rtcExt:name="ARToolkitPlus"/>
+            <rtcExt:libraries rtcExt:other="Info." rtcExt:version="2.4.9" rtcExt:name="OpenCV"/>
+        </rtcExt:targets>
+    </rtc:Language>
 </rtc:RtcProfile>

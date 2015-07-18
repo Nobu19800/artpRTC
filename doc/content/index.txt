@@ -106,8 +106,6 @@ The available configuration parameters are described below:
 ================ ================== ================ ======
 Parameter        Data type          Default Value    Effect
 ================ ================== ================ ======
-pattfile         string             orbit.dat        
-camerafile       string             data/LogitechPro4000.dat 
 ================ ================== ================ ======
 
 Ports
@@ -118,8 +116,6 @@ The ports provided by the component are described below:
 =============== =========== ============================== =======
 Name            Type        Data type                      Purpose
 =============== =========== ============================== =======
-image           InPort      RTC::CameraImage               
-pos             OutPort     RTC::TimedPose3D               
 =============== =========== ============================== =======
 
 Examples
