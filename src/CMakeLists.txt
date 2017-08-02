@@ -1,6 +1,12 @@
 set(comp_srcs artp.cpp artpFunc.cpp ImageDataCom.cpp )
 set(standalone_srcs artpComp.cpp)
 
+set(ARTOOLKITPLUS_DIRECTORIY ${ARTOOLKITPLUS_DIRECTORIY} CACHE PATH "set ARTOOLKITPLUS_DIRECTORIY ")
+
+if(NOT ARTOOLKITPLUS_DIRECTORIY)
+	message(FATAL_ERROR "Please set ARTOOLKITPLUS_DIRECTORIY.")
+endif()
+
 if (DEFINED OPENRTM_INCLUDE_DIRS)
   string(REGEX REPLACE "-I" ";"
     OPENRTM_INCLUDE_DIRS "${OPENRTM_INCLUDE_DIRS}")
@@ -30,7 +36,8 @@ include_directories(${PROJECT_BINARY_DIR})
 include_directories(${PROJECT_BINARY_DIR}/idl)
 include_directories(${OPENRTM_INCLUDE_DIRS})
 include_directories(${OMNIORB_INCLUDE_DIRS})
-include_directories(C:/ARToolKitPlus_2.1.1/include)
+include_directories(${ARTOOLKITPLUS_DIRECTORIY}/include)
+#include_directories(C:/ARToolKitPlus_2.1.1/include)
 add_definitions(${OPENRTM_CFLAGS})
 add_definitions(${OMNIORB_CFLAGS})
 
@@ -38,7 +45,12 @@ MAP_ADD_STR(comp_hdrs "../" comp_headers)
 
 link_directories(${OPENRTM_LIBRARY_DIRS})
 link_directories(${OMNIORB_LIBRARY_DIRS})
-link_directories(C:/ARToolKitPlus_2.1.1/lib/Win32)
+
+
+
+
+link_directories(${ARTOOLKITPLUS_DIRECTORIY}/lib/Win32)
+#link_directories(C:/ARToolKitPlus_2.1.1/lib/Win32)
 
 add_library(${PROJECT_NAME} ${LIB_TYPE} ${comp_srcs}
   ${comp_headers} ${ALL_IDL_SRCS})
