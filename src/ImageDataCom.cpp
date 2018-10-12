@@ -12,7 +12,7 @@
 IplImage* GetCameraImage(RTC::CameraImage *ci)
 {
 	IplImage* m_imageBuff;
-	std::string format = ci->format;
+	std::string format = (const char*)ci->format;
 	if(format == "jpeg" || format == "png")
 	{
 		std::vector<uchar> buff;

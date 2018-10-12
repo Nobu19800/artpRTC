@@ -27,12 +27,12 @@ static const char* artp_spec[] =
     "lang_type",         "compile",
     // Configuration variables
     "conf.default.markerMode", "SIMPLE",
-    "conf.default.camerafile", "data/LogitechPro4000.dat",
+    "conf.default.camerafile", "data/Logicool.cal",
 	"conf.default.threshold", "150",
 	"conf.default.borderWidth", "0.25",
-	"conf.default.patternWidth", "80",
+	"conf.default.patternWidth", "40",
 	"conf.default.nNearClip", "1.0",
-	"conf.default.nFarClip", "1000.0",
+	"conf.default.nFarClip", "100.0",
 	"conf.default.patternID", "0",
     // Widget
     "conf.__widget__.markerMode", "radio",
@@ -63,6 +63,7 @@ artp::artp(RTC::Manager* manager)
     // </rtc-template>
 {
 	m_artpFunc = NULL;
+	m_imageBuff = NULL;
 }
 
 /*!
@@ -96,12 +97,12 @@ RTC::ReturnCode_t artp::onInitialize()
   // <rtc-template block="bind_config">
   // Bind variables and configuration variable
   bindParameter("markerMode", m_markerMode, "SIMPLE");
-  bindParameter("camerafile", m_camerafile, "data/LogitechPro4000.dat");
+  bindParameter("camerafile", m_camerafile, "data/Logicool.cal");
   bindParameter("threshold", m_threshold, "150");
   bindParameter("borderWidth", m_borderWidth, "0.25");
-  bindParameter("patternWidth", m_patternWidth, "80");
+  bindParameter("patternWidth", m_patternWidth, "40");
   bindParameter("nNearClip", m_nNearClip, "1.0");
-  bindParameter("nFarClip", m_nFarClip, "1000.0");
+  bindParameter("nFarClip", m_nFarClip, "100.0");
   bindParameter("patternID", m_patternID, "0");
   
 
@@ -166,27 +167,42 @@ RTC::ReturnCode_t artp::onExecute(RTC::UniqueId ec_id)
 			cvReleaseImage(&m_imageBuff);
          
 		}
-
+		
 		m_imageBuff = GetCameraImage(&m_image);
+		
+		
 
+		
 		if(m_artpFunc == NULL)
 		{
 			m_artpFunc = new artpFunc();
+			
 			if(!m_artpFunc->init(m_imageBuff,m_camerafile,m_markerMode,m_threshold,m_borderWidth,m_patternWidth,m_nNearClip,m_nFarClip))
 			{
+				
 				return RTC::RTC_ERROR; 
 			}
 		}
+		
 		
 		
 		if(!m_artpFunc->AR_GetPose(&m_pos,&m_trans,m_imageBuff,m_patternID))
 		{
 			return RTC::RTC_OK;
 		}
+		const double MAXV = 1000000;
+		const double MINV = 0.00001;
+		if ((abs((double)m_pos.data.position.x) < MINV || abs((double)m_pos.data.position.x) > MAXV) && (abs((double)m_pos.data.position.y) < MINV || abs((double)m_pos.data.position.y) > MAXV) && (abs((double)m_pos.data.position.z) < MINV || abs((double)m_pos.data.position.z) > MAXV) && (abs((double)m_pos.data.orientation.r) < MINV || abs((double)m_pos.data.orientation.r) > MAXV) && (abs((double)m_pos.data.orientation.p) < MINV || abs((double)m_pos.data.orientation.p) > MAXV) && (abs((double)m_pos.data.orientation.y) < MINV || abs((double)m_pos.data.orientation.y) > MAXV))
+		{
+			return RTC::RTC_OK;
+		}
+		
+		
 		std::cout << m_pos.data.position.x << "\t" << m_pos.data.position.y << "\t" << m_pos.data.position.z << "\t" << m_pos.data.orientation.r << "\t"  << m_pos.data.orientation.p << "\t" << m_pos.data.orientation.y << std::endl;
 		
 		m_posOut.write();
 		m_transOut.write();
+		
 
 
 	}

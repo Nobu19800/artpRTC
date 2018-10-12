@@ -18,6 +18,8 @@
 #include <rtm/idl/BasicDataTypeSkel.h>
 #include <rtm/idl/ExtendedDataTypesSkel.h>
 
+#include <ARToolKitPlus/TrackerSingleMarker.h>
+
 
 
 class artpFunc
@@ -36,6 +38,8 @@ public:
 	 float m_nNearClip;
 	 float m_nFarClip;
 	 int width, height;
+
+	 ARToolKitPlus::TrackerSingleMarker *mTracker;
 
 };
 #endif

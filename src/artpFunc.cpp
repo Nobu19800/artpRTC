@@ -1,7 +1,9 @@
 #include "artpFunc.h"
 #include <math.h>
 #include <iostream>
-#include <ARToolKitPlus/TrackerSingleMarkerImpl.h>
+
+
+#include <ARToolKitPlus/TrackerSingleMarker.h>
 
 
 
@@ -13,6 +15,8 @@ artpFunc::artpFunc()
 	
 	width = 0;
 	height = 0;
+
+	std::min(1, 2);
 	
 }
 
@@ -35,14 +39,18 @@ bool artpFunc::init(IplImage* img, std::string cn, std::string markerMode, int t
 	m_nNearClip = nNearClip;
 	m_nFarClip = nFarClip;
 
-	mTracker = new ARToolKitPlus::TrackerSingleMarkerImpl<6, 6, 6, 1, 8>(img->width,img->height);
+	
+
+	mTracker = new ARToolKitPlus::TrackerSingleMarker(img->width, img->height, 8, 6, 6, 6, 0);
 	
 	if(!mTracker->init(cn.c_str(), nNearClip, nFarClip))
 	{
 		return false;
 	}
 	
+	
 	mTracker->setPixelFormat(ARToolKitPlus::PIXEL_FORMAT_LUM);
+	
 
 	mTracker->setPatternWidth(patternWidth);
 	mTracker->setBorderWidth(borderWidth);
@@ -85,43 +93,55 @@ bool artpFunc::AR_GetPose(RTC::TimedPose3D *pose, RTC::TimedDoubleSeq *trans, Ip
 	grayscaleImg->origin = img->origin;
 	cvCvtColor(img, grayscaleImg, CV_RGB2GRAY);
 
-	ARToolKitPlus::ARUint8* data = (ARToolKitPlus::ARUint8*)(grayscaleImg->imageData);
-	const int markerId = mTracker->calc(data);
+	unsigned char * data = (unsigned char *)(grayscaleImg->imageData);
+	std::vector<int> markerId = mTracker->calc(data);
+	mTracker->selectBestMarkerByCf();
+	float conf = mTracker->getConfidence();
 
-	//std::cout << markerId << std::endl;
-
-	if( markerId == pattID )
+	/*std::cout << markerId.size() << "\t" << conf << std::endl;
+	for (int i = 0; i < 4; i++)
 	{
-		const ARFloat* mv = (const ARFloat*)( mTracker->getModelViewMatrix() );
-		pose->data.position.x = mv[12];
-		pose->data.position.y = mv[13];
-		pose->data.position.z = mv[14];
 
-		float pitch = asin(-mv[8]);
-		float yaw = asin(mv[9]/cos(pitch));
-		float roll = asin(-mv[4]/cos(pitch));
+		std::cout << mTracker->getModelViewMatrix()[i * 4] << "\t" << mTracker->getModelViewMatrix()[i * 4 + 1] << "\t" << mTracker->getModelViewMatrix()[i * 4 + 2] << "\t" << mTracker->getModelViewMatrix()[i * 4 + 3] << std::endl;
 
-		pose->data.orientation.r = roll;
-		pose->data.orientation.p = pitch;
-		pose->data.orientation.y = yaw;
-
-		trans->data.length(16);
-		for(int i=0;i < 16;i++)
-			trans->data[i] = mv[i];
-
-		
-		
-		
-		
 	}
-	else
+	*/
+
+	if (markerId.size() > 0)
 	{
-		
-		if(grayscaleImg)
-			cvReleaseImage(&grayscaleImg);
-		return false;
-	}
+		//std::cout << "ID: " << markerId[0] << std::endl;
+		if (markerId[0] == pattID)
+		{
+			const ARFloat* mv = (const ARFloat*)(mTracker->getModelViewMatrix());
+			pose->data.position.x = mv[14] / 1000.;
+			pose->data.position.y = -mv[12] / 1000.;
+			pose->data.position.z = -mv[13] / 1000.;
 
+			float yaw = asin(-mv[8]);
+			float pitch = asin(mv[9] / cos(yaw));
+			float roll = asin(-mv[4] / cos(yaw));
+
+			pose->data.orientation.r = roll;
+			pose->data.orientation.p = pitch;
+			pose->data.orientation.y = yaw;
+
+			trans->data.length(16);
+			for (int i = 0; i < 16; i++)
+				trans->data[i] = mv[i];
+
+
+
+
+
+		}
+		else
+		{
+
+			if (grayscaleImg)
+				cvReleaseImage(&grayscaleImg);
+			return false;
+		}
+	}
 	
 	if(grayscaleImg)
 		cvReleaseImage(&grayscaleImg);
